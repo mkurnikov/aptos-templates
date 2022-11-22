@@ -2,9 +2,6 @@
 name = "{{ package_name }}"
 version = "0.1.0"
 
-[addresses]
-{{ package_lowercase_name }} = "{{ default_address }}"
-
 [dependencies.AptosFramework]
 git = "https://github.com/aptos-labs/aptos-core.git"
 rev = "main"
