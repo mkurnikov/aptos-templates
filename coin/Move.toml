@@ -3,4 +3,4 @@ name = "{{ package_name }}"
 version = "0.1.0"
 
 [addresses]
-coin_address = "{{ address }}"
+coin_address = "0x42"
