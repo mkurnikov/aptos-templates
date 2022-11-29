@@ -1,8 +1,0 @@
-[package]
-name = "{{ package_name }}"
-version = "0.1.0"
-
-[dependencies]
-git = "https://github.com/aptos-labs/aptos-core.git"
-rev = "main"
-subdir = "aptos-move/framework/aptos-framework"
