@@ -1,3 +1,16 @@
+/// This module defines `UserCoin`, a coin on the Aptos blockchain.
+///
+/// Aptos standard library has a `coin.move` module, which describes how coins are defined. Think of it as ERC20.
+/// To define a new coin, one needs to create a struct with name of the coin.
+/// It's `struct UserCoin {}` here.
+/// Struct itself is not a coin. You need to use this type as an argument to `coin::Coin` type, ie. `Coin<UserCoin>`.
+///
+/// The module also defines a couple of entrypoints to handle this new coin:
+///    * `initialize(coin_admin: &signer)` - registers coin and adds permissions to mint them to the `coin_admin` account.
+///      It can only be executed once.
+///    * `mint(coin_admin: &signer, to_addr: address, amount: u64)` - mints an amount of `Coin<UserCoin>`
+///      to `to_addr` balance. Should be signed with the `coin_admin` account.
+///    * `burn(user: &signer, amount: u64)` - burns an `amount` of `Coin<UserCoin>` from `user` balance.
 module coin_address::user_coin {
     use std::signer;
     use std::string::utf8;
@@ -11,17 +24,17 @@ module coin_address::user_coin {
     const ERR_COIN_NOT_INITIALIZED: u64 = 2;
 
     /// COIN struct is a parameter to be used as a generic, coin itself is a resource of type `Coin<COIN>`
-    struct COIN {}
+    struct UserCoin {}
 
-    struct Capabilities has key { mint_cap: MintCapability<COIN>, burn_cap: BurnCapability<COIN> }
+    struct Capabilities has key { mint_cap: MintCapability<UserCoin>, burn_cap: BurnCapability<UserCoin> }
 
     /// Initializes the COIN struct as a Coin in the Aptos network.
     public entry fun initialize(coin_admin: &signer) {
         assert!(signer::address_of(coin_admin) == @coin_address, ERR_NOT_ADMIN);
-        assert!(!coin::is_coin_initialized<COIN>(), ERR_COIN_INITIALIZED);
+        assert!(!coin::is_coin_initialized<UserCoin>(), ERR_COIN_INITIALIZED);
 
         let (burn_cap, freeze_cap, mint_cap) =
-            coin::initialize<COIN>(
+            coin::initialize<UserCoin>(
                 coin_admin,
                 utf8(b"UserCoin"),
                 utf8(b"USER_COIN"),
@@ -37,7 +50,7 @@ module coin_address::user_coin {
     /// Mints an `amount` of Coin<COIN> and deposits it to the address `to_addr`.
     public entry fun mint(coin_admin: &signer, to_addr: address, amount: u64) acquires Capabilities {
         assert!(signer::address_of(coin_admin) == @coin_address, ERR_NOT_ADMIN);
-        assert!(coin::is_coin_initialized<COIN>(), ERR_COIN_INITIALIZED);
+        assert!(coin::is_coin_initialized<UserCoin>(), ERR_COIN_INITIALIZED);
 
         let caps = borrow_global<Capabilities>(@coin_address);
         let coins = coin::mint(amount, &caps.mint_cap);
@@ -45,10 +58,10 @@ module coin_address::user_coin {
     }
 
     /// Burns an `amount` of `Coin<COIN>` from user's balance.
-    public fun burn(user: &signer, amount: u64) acquires Capabilities {
-        assert!(coin::is_coin_initialized<COIN>(), ERR_COIN_INITIALIZED);
+    public entry fun burn(user: &signer, amount: u64) acquires Capabilities {
+        assert!(coin::is_coin_initialized<UserCoin>(), ERR_COIN_INITIALIZED);
 
-        let coin = coin::withdraw<COIN>(user, amount);
+        let coin = coin::withdraw<UserCoin>(user, amount);
         let caps = borrow_global<Capabilities>(@coin_address);
         coin::burn(coin, &caps.burn_cap);
     }
