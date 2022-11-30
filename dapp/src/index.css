@@ -11,3 +11,57 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.app {
+  text-align:center;
+  padding-top: 200px;
+}
+
+.app-label{
+  font-size: 16px;
+  text-align: center;
+  padding: 10px
+}
+
+.app-table {
+  margin: auto;
+  width: 500px;
+  align-content: center;
+  text-align: center;
+  border: 1px solid #eee;
+}
+
+.app-table td{
+  padding: 10px;
+}
+
+.app-input{
+  height: 30px;
+  width: 100%;
+  border: 1px solid #eee;
+}
+
+.app-name {
+    text-align: right;
+}
+
+.button {
+  background-color: #eee;
+  color: #000;
+  border-radius: 10px;
+  -moz-border-radius: 10px;
+  -webkit-border-radius: 10px;
+  cursor: pointer;
+  width: 200px;
+  height: 40px;
+  text-align: center;
+  border: 1px solid #eee;
+}
+
+.app-text {
+  font-size: 14px;
+}
+
+.app-result{
+  height: 50px;
+}
